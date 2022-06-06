@@ -1,4 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-
-createApp(App).mount('#app')
+import { ipcRenderer } from './vue/ipcrenderer'
+const app = createApp(App)
+app.use(ipcRenderer)
+app.mount('#app')
