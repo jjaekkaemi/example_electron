@@ -1,15 +1,22 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png" />
   <HelloWorld msg="Welcome to Your Vue.js App" />
+  <button type="button" @click="buttonClick()" />
 </template>
 
 <script>
+import { send } from "./vue/ipcrenderer";
 import HelloWorld from "./components/HelloWorld.vue";
 
 export default {
   name: "App",
   components: {
     HelloWorld,
+  },
+  methods: {
+    buttonClick() {
+      send();
+    },
   },
 };
 </script>
