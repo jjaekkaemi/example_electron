@@ -1,9 +1,12 @@
 const clipboard = require("./index");
 const { globalShortcut } = require("electron");
-
+import { listText, addText } from "./database.js";
+let win = null
+let db = null
 clipboard
   .on("text-changed", () => {
     let currentText = clipboard.readText();
+    addText(db, 1, currentText, new Date())
     console.log(currentText);
   })
   .once("text-changed", () => {
@@ -14,11 +17,15 @@ clipboard
     console.log(currentIMage);
   })
   .startWatching();
-function clipboardOpen() {
-  return globalShortcut.register("Shift+V", registerCallback);
+
+
+function init(w, d) {
+  win = w;
+  db = d;
 }
 function registerCallback() {
-  console.log("흠냐리..?");
+  win.webContents.send('asynchronous-reply', '클립보드화면!')
+  listText(db)
 }
 function clipboardUpdate(shortcut, newshortcut) {
   globalShortcut.unregister(shortcut, () => {
@@ -36,4 +43,4 @@ function clipboardUpdate(shortcut, newshortcut) {
     }
   });
 }
-export { clipboard, clipboardUpdate, registerCallback };
+export { clipboard, clipboardUpdate, registerCallback, init };

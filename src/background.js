@@ -13,11 +13,12 @@ const { ipcMain } = require("./electron/ipcmain");
 
 import initTrayIconMenu from "./electron/tray";
 // main 프로세스안에서
-import { clipboard, registerCallback } from "./electron/clipboard";
+import { clipboard, registerCallback, init } from "./electron/clipboard";
+import { listMemo, createDatabase, addMemo } from "./electron/database.js";
 const Store = require("electron-store");
 const store = new Store();
 const path = require("path");
-
+// store.set("clipboardopen", "Shift+V")
 // app.whenReady().then(() => {
 //   globalShortcut.register('CommandOrControl+C', () => {
 //     console.log('Electron loves global shortcuts!')
@@ -48,10 +49,8 @@ async function createWindow() {
     // Load the index.html when not in development
     win.loadURL("app://./index.html");
   }
-  globalShortcut.register(store.get("clipboardopen"), registerCallback);
-  // globalShortcut.register("Shift+V", () => {
-  //   console.log("dfsf");
-  // });
+
+
   win.on("close", (event) => {
     if (app.quitting) console.log("quitting");
     else {
@@ -59,6 +58,16 @@ async function createWindow() {
       win.hide();
     }
   });
+
+  let db = createDatabase("database.db");
+  init(win, db);
+  let clipboardopen = store.get("clipboardopen")
+  if (clipboardopen) {
+    globalShortcut.register(store.get("clipboardopen"), registerCallback);
+  }
+  else {
+    store.set("clipboardopen", "Shift+V")
+  }
   initTrayIconMenu(win, app, path.join(__dirname, "../src/assets/logo.png"));
 }
 
