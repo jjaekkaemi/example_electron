@@ -2,9 +2,6 @@ import {
   app,
   protocol,
   BrowserWindow,
-  Menu,
-  Tray,
-  globalShortcut,
 } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS3_DEVTOOLS } from "electron-devtools-installer";
@@ -13,20 +10,13 @@ const { ipcMain } = require("./electron/ipcmain");
 
 import initTrayIconMenu from "./electron/tray";
 // main 프로세스안에서
-import { clipboard, registerCallback, init } from "./electron/clipboard";
-import { listMemo, createDatabase, addMemo } from "./electron/database.js";
+import { clipboardinit } from "./electron/clipboard";
+import { createDatabase } from "./electron/database.js";
+
+const path = require("path");
+let win = null;
 const Store = require("electron-store");
 const store = new Store();
-const path = require("path");
-// store.set("clipboardopen", "Shift+V")
-// app.whenReady().then(() => {
-//   globalShortcut.register('CommandOrControl+C', () => {
-//     console.log('Electron loves global shortcuts!')
-//   })
-// }).then(createWindow)
-let win = null;
-//트레이 아이콘
-
 async function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
@@ -60,14 +50,7 @@ async function createWindow() {
   });
 
   let db = createDatabase("database.db");
-  init(win, db);
-  let clipboardopen = store.get("clipboardopen")
-  if (clipboardopen) {
-    globalShortcut.register(store.get("clipboardopen"), registerCallback);
-  }
-  else {
-    store.set("clipboardopen", "Shift+V")
-  }
+  clipboardinit(win, db);
   initTrayIconMenu(win, app, path.join(__dirname, "../src/assets/logo.png"));
 }
 

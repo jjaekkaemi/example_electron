@@ -1,6 +1,6 @@
 const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
-function addText(db, id, value, datetime) {
+function addText(db, value, datetime) {
     db.run(`INSERT INTO text(value, datetime) VALUES ('${value}', '${datetime}')`, function (createResult) {
         if (createResult) throw createResult;
     });
@@ -24,10 +24,10 @@ function createDatabase(file) {
     if (!fs.existsSync(file)) {
         console.log("creating database file");
         fs.openSync(file, "w");
-        let query = "CREATE TABLE `text` ( `id` INTEGER primary key, 'value' TEXT, `datetime` TEXT )";
+        let query = "CREATE TABLE `text` ( `id` INTEGER primary key AUTOINCREMENT, 'value' TEXT, `datetime` TEXT )";
         db.serialize(function () {
             db.run(query);
-            query = "CREATE TABLE `image` ( `id` INTEGER primary key, 'value' TEXT, `datetime` TEXT )";
+            query = "CREATE TABLE `image` ( `id` INTEGER primary key AUTOINCREMENT, 'value' TEXT, `datetime` TEXT )";
             db.run(query);
         });
         console.log("database initialized");
