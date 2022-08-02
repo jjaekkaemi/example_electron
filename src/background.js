@@ -1,8 +1,4 @@
-import {
-  app,
-  protocol,
-  BrowserWindow,
-} from "electron";
+import { app, protocol, BrowserWindow } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS3_DEVTOOLS } from "electron-devtools-installer";
 const isDevelopment = process.env.NODE_ENV !== "production";
@@ -12,6 +8,7 @@ import initTrayIconMenu from "./electron/tray";
 // main 프로세스안에서
 import { clipboardinit } from "./electron/clipboard";
 import { createDatabase } from "./electron/database.js";
+import { argv } from "process";
 
 const path = require("path");
 let win = null;
@@ -34,26 +31,29 @@ async function createWindow() {
     // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
     if (!process.env.IS_TEST) win.webContents.openDevTools();
+    // win.on("close", (event) => {
+    //   if (app.quitting) console.log("quitting");
+    //   else {
+    //     event.preventDefault();
+    //     win.hide();
+    //   }
+    // });
+
+    let db = createDatabase("database.db");
+    await clipboardinit(win, db);
+    // initTrayIconMenu(win, app, path.join(__dirname, "../src/assets/logo.png"));
   } else {
     createProtocol("app");
     // Load the index.html when not in development
     win.loadURL("app://./index.html");
+    let db = createDatabase("database.db");
+    await clipboardinit(win, db);
   }
-
-
-  win.on("close", (event) => {
-    if (app.quitting) console.log("quitting");
-    else {
-      event.preventDefault();
-      win.hide();
-    }
-  });
-
-  let db = createDatabase("database.db");
-  clipboardinit(win, db);
-  initTrayIconMenu(win, app, path.join(__dirname, "../src/assets/logo.png"));
 }
 
+app.setLoginItemSettings({
+  openAtLogin: true,
+});
 // Quit when all windows are closed.
 app.on("window-all-closed", () => {
   // On macOS it is common for applications and their menu bar

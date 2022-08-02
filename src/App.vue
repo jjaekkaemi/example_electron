@@ -1,11 +1,11 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Welcome to Your Vue.js App" />
+  <HelloWorld :msg="list" />
   <button type="button" @click="buttonClick()" />
 </template>
 
 <script>
-import { send } from "./vue/ipcrenderer";
+import { send, ipcRenderer } from "./vue/ipcrenderer";
 import HelloWorld from "./components/HelloWorld.vue";
 
 export default {
@@ -13,10 +13,21 @@ export default {
   components: {
     HelloWorld,
   },
+  mounted() {
+    ipcRenderer.on("asynchronous-reply", (event, arg) => {
+      console.log(arg); // "pong"이 출력됩니다.
+      this.list = arg;
+    });
+  },
   methods: {
     buttonClick() {
       send();
     },
+  },
+  data() {
+    return {
+      list: [],
+    };
   },
 };
 </script>
