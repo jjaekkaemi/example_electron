@@ -36,17 +36,16 @@ async function clipboardinit(w, d) {
   }
 }
 async function clipboardCallback() {
-  win.webContents.send("asynchronous-reply", await listText(db));
+  win.show();
+  win.setFocusable(false)
+  win.webContents.send("open-clipboard", await listText(db));
 }
 function clipboardUpdate(shortcut, newshortcut) {
-  console.log("unregister!!!");
-  globalShortcut.unregister(shortcut, () => {
-    try {
-      console.log(shortcut);
-    } catch (error) {
-      console.log(error);
-    }
-  });
+  globalShortcut.unregisterAll();
+
+  if (store.get("clipboardopen")) {
+    store.delete('clipboardopen');
+  }
   globalShortcut.register(newshortcut, clipboardCallback);
   store.set("clipboardopen", newshortcut);
 }

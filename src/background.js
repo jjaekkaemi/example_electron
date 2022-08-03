@@ -2,7 +2,7 @@ import { app, protocol, BrowserWindow } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS3_DEVTOOLS } from "electron-devtools-installer";
 const isDevelopment = process.env.NODE_ENV !== "production";
-const { ipcMain } = require("./electron/ipcmain");
+const { ipcMain, initIpcMain } = require("./electron/ipcmain");
 
 import initTrayIconMenu from "./electron/tray";
 // main 프로세스안에서
@@ -30,17 +30,19 @@ async function createWindow() {
     // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
     if (!process.env.IS_TEST) win.webContents.openDevTools();
-    // win.on("close", (event) => {
-    //   if (app.quitting) console.log("quitting");
-    //   else {
-    //     event.preventDefault();
-    //     win.hide();
-    //   }
-    // });
+    win.on("close", (event) => {
+      if (app.quitting) console.log("quitting");
+      else {
+        event.preventDefault();
+        win.hide();
+      }
+    });
 
-    // let db = createDatabase("database.db");
-    // await clipboardinit(win, db);
-    // initTrayIconMenu(win, app, path.join(__dirname, "../src/assets/logo.png"));
+    let db = createDatabase("database.db");
+    await clipboardinit(win, db);
+    initTrayIconMenu(win, app, path.join(__dirname, "../src/assets/logo.png"));
+    initIpcMain(win)
+
   } else {
     createProtocol("app");
     // Load the index.html when not in development

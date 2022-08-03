@@ -1,27 +1,29 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld :msg="list" />
+  <Main v-if="main" :msg="list" />
+  <Clipboard v-else :msg="list" />
   <button type="button" @click="buttonClick()" />
-  <h1>{{ example }}</h1>
 </template>
 
 <script>
 import { send, ipcRenderer } from "./vue/ipcrenderer";
-import HelloWorld from "./components/HelloWorld.vue";
-
+import Clipboard from "./components/Clipboard.vue";
+import Main from "./components/Main.vue";
 export default {
   name: "App",
   components: {
-    HelloWorld,
+    Clipboard,
+    Main,
   },
   mounted() {
-    ipcRenderer.on("asynchronous-reply", (event, arg) => {
+    ipcRenderer.on("open-clipboard", (event, arg) => {
       console.log(arg); // "pong"이 출력됩니다.
       this.list = arg;
+      this.main = false;
     });
-    ipcRenderer.on("asynchronous-replyyyy", (event, arg) => {
+    ipcRenderer.on("get-db", (event, arg) => {
       console.log(arg); // "pong"이 출력됩니다.
-      this.example = arg;
+      this.list = arg;
     });
   },
   methods: {
@@ -32,7 +34,7 @@ export default {
   data() {
     return {
       list: "Sfsfd",
-      example: "sfsf",
+      main: true,
     };
   },
 };

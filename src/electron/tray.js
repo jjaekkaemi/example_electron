@@ -11,7 +11,7 @@ function initTrayIconMenu(w, app, location) {
         console.log("1번클릭!");
         w.show();
       },
-    }, //checked는 기본선택입니다.
+    },
     {
       label: "종료",
       type: "normal",

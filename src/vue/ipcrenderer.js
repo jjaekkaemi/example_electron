@@ -7,7 +7,7 @@ const { ipcRenderer } = require("electron");
 //   data = arg;
 // });
 // ipcRenderer.send("asynchronous-message", "ping");
-function send() {
-  ipcRenderer.send("asynchronous-message", "ping");
+function ipcSend(data) {
+  ipcRenderer.send("click-clipboard", data);
 }
-export { ipcRenderer, send };
+export { ipcRenderer, ipcSend };

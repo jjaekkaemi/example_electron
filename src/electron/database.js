@@ -34,7 +34,6 @@ async function listText(db) {
 function createDatabase(file) {
   let db = new sqlite3.Database(file);
   if (!fs.existsSync(file)) {
-    console.log("creating database file");
     fs.openSync(file, "w");
     let query =
       "CREATE TABLE `text` ( `id` INTEGER primary key AUTOINCREMENT, 'value' TEXT, `datetime` TEXT )";
