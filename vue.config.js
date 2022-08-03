@@ -1,7 +1,13 @@
 module.exports = {
   pluginOptions: {
     electronBuilder: {
-      nodeIntegration: true
-    }
-  }
-}
+      builderOptions: {
+        appId: "test.com",
+        win: {
+          icon: "public/logo.ico",
+        },
+      },
+      nodeIntegration: true,
+    },
+  },
+};

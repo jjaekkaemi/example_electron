@@ -36,7 +36,6 @@ async function clipboardinit(w, d) {
   }
 }
 async function clipboardCallback() {
-  win.webContents.send("asynchronous-reply", "클립보드화면!");
   win.webContents.send("asynchronous-reply", await listText(db));
 }
 function clipboardUpdate(shortcut, newshortcut) {

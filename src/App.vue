@@ -2,6 +2,7 @@
   <img alt="Vue logo" src="./assets/logo.png" />
   <HelloWorld :msg="list" />
   <button type="button" @click="buttonClick()" />
+  <h1>{{ example }}</h1>
 </template>
 
 <script>
@@ -18,6 +19,10 @@ export default {
       console.log(arg); // "pong"이 출력됩니다.
       this.list = arg;
     });
+    ipcRenderer.on("asynchronous-replyyyy", (event, arg) => {
+      console.log(arg); // "pong"이 출력됩니다.
+      this.example = arg;
+    });
   },
   methods: {
     buttonClick() {
@@ -26,7 +31,8 @@ export default {
   },
   data() {
     return {
-      list: [],
+      list: "Sfsfd",
+      example: "sfsf",
     };
   },
 };

@@ -8,7 +8,6 @@ import initTrayIconMenu from "./electron/tray";
 // main 프로세스안에서
 import { clipboardinit } from "./electron/clipboard";
 import { createDatabase } from "./electron/database.js";
-import { argv } from "process";
 
 const path = require("path");
 let win = null;
@@ -39,15 +38,30 @@ async function createWindow() {
     //   }
     // });
 
-    let db = createDatabase("database.db");
-    await clipboardinit(win, db);
+    // let db = createDatabase("database.db");
+    // await clipboardinit(win, db);
     // initTrayIconMenu(win, app, path.join(__dirname, "../src/assets/logo.png"));
   } else {
     createProtocol("app");
     // Load the index.html when not in development
     win.loadURL("app://./index.html");
-    let db = createDatabase("database.db");
+    // let db = createDatabase(
+    //   app.getPath("exe").replace("example2.exe", "database.db")
+    // );
+    win.on("close", (event) => {
+      if (app.quitting) console.log("quitting");
+      else {
+        event.preventDefault();
+        win.hide();
+      }
+    });
+    let db = createDatabase(
+      path.join(app.getPath("userData"), "./database.db")
+    );
     await clipboardinit(win, db);
+    const iconPath = path.join(__dirname, "logo.ico");
+
+    initTrayIconMenu(win, app, iconPath);
   }
 }
 
