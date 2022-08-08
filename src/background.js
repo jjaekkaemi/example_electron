@@ -40,7 +40,7 @@ async function createWindow() {
 
     let db = createDatabase("database.db");
     await clipboardinit(win, db);
-    initTrayIconMenu(win, app, path.join(__dirname, "../src/assets/logo.png"));
+    initTrayIconMenu(win, db, app, path.join(__dirname, "../src/assets/logo.png"));
     initIpcMain(win)
 
   } else {

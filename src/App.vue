@@ -21,6 +21,11 @@ export default {
       this.list = arg;
       this.main = false;
     });
+    ipcRenderer.on("close-clipboard", (event, arg) => {
+      console.log(arg); // "pong"이 출력됩니다.
+      this.list = arg;
+      this.main = true;
+    });
     ipcRenderer.on("get-db", (event, arg) => {
       console.log(arg); // "pong"이 출력됩니다.
       this.list = arg;

@@ -1,5 +1,6 @@
 const clipboard = require("./index");
 const { globalShortcut } = require("electron");
+import { writeBuffer } from "electron-clipboard-extended";
 import { listText, addText } from "./database.js";
 
 const Store = require("electron-store");
@@ -36,9 +37,12 @@ async function clipboardinit(w, d) {
   }
 }
 async function clipboardCallback() {
-  win.show();
-  win.setFocusable(false)
   win.webContents.send("open-clipboard", await listText(db));
+
+  win.show()
+  win.setAlwaysOnTop(true)
+  win.setFocusable(false)
+
 }
 function clipboardUpdate(shortcut, newshortcut) {
   globalShortcut.unregisterAll();

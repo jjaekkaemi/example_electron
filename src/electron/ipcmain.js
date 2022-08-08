@@ -1,4 +1,4 @@
-const { ipcMain, globalShortcut, app } = require("electron");
+const { ipcMain, globalShortcut, app, clipboard } = require("electron");
 import { listMemo, createDatabase, addMemo, listText } from "./database.js";
 let win = null;
 const robot = require('robotjs')
@@ -13,8 +13,11 @@ ipcMain.on("asynchronous-message", (event, arg) => {
   // listMemo(db);
 });
 ipcMain.on("click-clipboard", (evnet, arg) => {
-  console.log(arg)
+  clipboard.writeText(arg)
   robot.keyTap('v', process.platform === 'darwin' ? 'command' : 'control')
+  win.setFocusable(true)
+  win.setAlwaysOnTop(false)
+  win.hide()
 })
 ipcMain.on("synchronous-message", (event, arg) => {
   console.log(arg); // "ping" 출력

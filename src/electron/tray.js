@@ -1,6 +1,9 @@
 import { Menu, Tray } from "electron";
+import { listText, addText } from "./database.js";
 let tray = null;
-function initTrayIconMenu(w, app, location) {
+let db = null;
+function initTrayIconMenu(w, d, app, location) {
+  db = d;
   tray = new Tray(location);
   const myMenu = Menu.buildFromTemplate([
     {
@@ -23,8 +26,10 @@ function initTrayIconMenu(w, app, location) {
   ]);
   tray.setToolTip("cva");
   tray.setContextMenu(myMenu);
-  tray.on("double-click", () => {
+  tray.on("double-click", async () => {
     console.log("double click!!");
+    w.setFocusable(true)
+    w.webContents.send("close-clipboard", await listText(db));
     w.show();
   });
 }
