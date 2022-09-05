@@ -1,12 +1,13 @@
 <template>
+  <div class="titlebar">hello</div>
+  <button type="button" @click="hidebuttonClick"></button>
   <img alt="Vue logo" src="./assets/logo.png" />
   <Main v-if="main" :msg="list" />
   <Clipboard v-else :msg="list" />
-  <button type="button" @click="buttonClick()" />
 </template>
 
 <script>
-import { send, ipcRenderer } from "./vue/ipcrenderer";
+import { ipcRenderer, send_hide } from "./vue/ipcrenderer";
 import Clipboard from "./components/Clipboard.vue";
 import Main from "./components/Main.vue";
 export default {
@@ -32,8 +33,8 @@ export default {
     });
   },
   methods: {
-    buttonClick() {
-      send();
+    hidebuttonClick() {
+      send_hide(true);
     },
   },
   data() {
@@ -53,5 +54,14 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.titlebar {
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+}
+
+.titlebar-button {
+  -webkit-app-region: no-drag;
 }
 </style>

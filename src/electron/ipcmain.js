@@ -15,17 +15,18 @@ ipcMain.on("asynchronous-message", (event, arg) => {
 ipcMain.on("click-clipboard", (evnet, arg) => {
   clipboard.writeText(arg)
   robot.keyTap('v', process.platform === 'darwin' ? 'command' : 'control')
-  win.setFocusable(true)
-  win.setAlwaysOnTop(false)
-  win.hide()
+
 })
 ipcMain.on("synchronous-message", (event, arg) => {
   console.log(arg); // "ping" 출력
   event.returnValue = "sync pong";
 });
-
+ipcMain.on("hide", (event, arg) => {
+  win.setFocusable(true)
+  win.setAlwaysOnTop(false)
+  win.hide()
+});
 ipcMain.on("getdb", async (event, arg) => {
   event.reply('getdb', await listText(db))
 })
-
 export { ipcMain, initIpcMain };

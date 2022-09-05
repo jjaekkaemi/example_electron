@@ -24,6 +24,7 @@ async function createWindow() {
       nodeIntegration: true,
       contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
     },
+
   });
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
@@ -31,18 +32,14 @@ async function createWindow() {
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
     if (!process.env.IS_TEST) win.webContents.openDevTools();
     win.on("close", (event) => {
-      if (app.quitting) console.log("quitting");
-      else {
-        event.preventDefault();
-        win.hide();
-      }
+      win.close()
+
     });
 
     let db = createDatabase("database.db");
     await clipboardinit(win, db);
     initTrayIconMenu(win, db, app, path.join(__dirname, "../src/assets/logo.png"));
     initIpcMain(win)
-
   } else {
     createProtocol("app");
     // Load the index.html when not in development
@@ -50,13 +47,13 @@ async function createWindow() {
     // let db = createDatabase(
     //   app.getPath("exe").replace("example2.exe", "database.db")
     // );
-    win.on("close", (event) => {
-      if (app.quitting) console.log("quitting");
-      else {
-        event.preventDefault();
-        win.hide();
-      }
-    });
+    // win.on("close", (event) => {
+    //   if (app.quitting) console.log("quitting");
+    //   else {
+    //     event.preventDefault();
+    //     win.hide();
+    //   }
+    // });
     let db = createDatabase(
       path.join(app.getPath("userData"), "./database.db")
     );

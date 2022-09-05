@@ -10,4 +10,8 @@ const { ipcRenderer } = require("electron");
 function ipcSend(data) {
   ipcRenderer.send("click-clipboard", data);
 }
-export { ipcRenderer, ipcSend };
+
+function send_hide(data) {
+  ipcRenderer.send("hide", data);
+}
+export { ipcRenderer, ipcSend, send_hide };
